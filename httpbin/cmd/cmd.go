@@ -16,12 +16,14 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/last9/last9-cdk/go/httpmetrics"
 	"github.com/mccutchen/go-httpbin/v2/httpbin"
 )
 
 const (
-	defaultListenHost = "0.0.0.0"
-	defaultListenPort = 8080
+	defaultListenHost  = "0.0.0.0"
+	defaultListenPort  = 8080
+	defaultMetricsPort = 9090
 
 	// Reasonable defaults for our http server
 	srvReadTimeout       = 5 * time.Second
@@ -86,6 +88,8 @@ func mainImpl(args []string, getEnv func(string) string, getHostname func() (str
 		ReadTimeout:       srvReadTimeout,
 	}
 
+	go httpmetrics.ServeMetrics(cfg.MetricsPort)
+
 	if err := listenAndServeGracefully(srv, cfg, logger); err != nil {
 		logger.Printf("error: %s", err)
 		return 1
@@ -100,6 +104,7 @@ type config struct {
 	AllowedRedirectDomains []string
 	ListenHost             string
 	ListenPort             int
+	MetricsPort            int
 	MaxBodySize            int64
 	MaxDuration            time.Duration
 	RealHostname           string
@@ -140,6 +145,7 @@ func loadConfig(args []string, getEnv func(string) string, getHostname func() (s
 	fs.StringVar(&cfg.ListenHost, "host", defaultListenHost, "Host to listen on")
 	fs.StringVar(&cfg.TLSCertFile, "https-cert-file", "", "HTTPS Server certificate file")
 	fs.StringVar(&cfg.TLSKeyFile, "https-key-file", "", "HTTPS Server private key file")
+	fs.IntVar(&cfg.MetricsPort, "metrics-port", defaultMetricsPort, "Port to servie metrics on")
 
 	// in order to fully control error output whether CLI arguments or env vars
 	// are used to configure the app, we need to take control away from the

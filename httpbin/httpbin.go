@@ -3,6 +3,8 @@ package httpbin
 import (
 	"net/http"
 	"time"
+
+	"github.com/last9/last9-cdk/go/httpmetrics"
 )
 
 // Default configuration values
@@ -173,6 +175,8 @@ func (h *HTTPBin) Handler() http.Handler {
 	if h.Observer != nil {
 		handler = observe(h.Observer, handler)
 	}
+
+	handler = httpmetrics.REDHandler(handler)
 
 	return handler
 }
