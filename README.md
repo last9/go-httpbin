@@ -1,6 +1,6 @@
 # go-httpbin
 
-> NOTE: This deviation in this fork is, support for emitting RED metrics of HTTP requests using [last9 Go CDK](https://github.com/last9/last9-cdk)
+> NOTE: The deviation in this fork is, support for emitting RED metrics of HTTP requests using [last9 Go CDK](https://github.com/last9/last9-cdk)
 
 A reasonably complete and well-tested golang port of [Kenneth Reitz][kr]'s
 [httpbin][httpbin-org] service, with zero dependencies outside the go stdlib.
