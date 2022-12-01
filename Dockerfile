@@ -1,16 +1,7 @@
 # syntax = docker/dockerfile:1.3
-FROM golang:1.19 AS build
+FROM alpine:3.14
+RUN apk add --no-cache bash vim curl
 
-WORKDIR /go/src/github.com/mccutchen/go-httpbin
+COPY ./go-httpbin /bin/go-httpbin
 
-COPY . .
-
-RUN --mount=type=cache,id=gobuild,target=/root/.cache/go-build \
-    make build buildtests
-
-FROM gcr.io/distroless/base
-
-COPY --from=build /go/src/github.com/mccutchen/go-httpbin/dist/go-httpbin* /bin/
-
-EXPOSE 8080
 CMD ["/bin/go-httpbin"]

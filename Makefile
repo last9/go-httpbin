@@ -25,6 +25,10 @@ build:
 	CGO_ENABLED=0 go build -ldflags="-s -w" -o $(DIST_PATH)/go-httpbin ./cmd/go-httpbin
 .PHONY: build
 
+build_linux_amd64:
+	env GOOS=linux GARCH=amd64 CGO_ENABLED=0 go build -ldflags="-s -w"  \
+		-o go-httpbin ./cmd/go-httpbin
+
 buildexamples: build
 	./examples/build-all
 .PHONY: buildexamples
